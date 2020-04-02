@@ -26,13 +26,11 @@ import fr.polytech.warehouse.utils.CarrierAPI;
  * WarehouseTest
  */
 @RunWith(Arquillian.class)
-// @Transactional(TransactionMode.COMMIT)
 public class DeliveryModifierTest extends AbstractWarehouseTest {
 
     @EJB
     private ControlledParcel controlledParcel;
 
-    // Test context
     private List<Parcel> parcels;
 
     @Before

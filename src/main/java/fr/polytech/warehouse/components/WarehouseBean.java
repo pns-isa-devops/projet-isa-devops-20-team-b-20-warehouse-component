@@ -41,7 +41,6 @@ public class WarehouseBean implements DeliveryModifier, ControlledParcel {
     private EntityManager entityManager;
 
     private CarrierAPI carrier;
-    // private List<Delivery> deliveries = new ArrayList<>();
 
     @Override
     public void useCarrierReference(CarrierAPI carrier) {
