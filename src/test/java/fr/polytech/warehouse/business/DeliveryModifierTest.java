@@ -34,7 +34,6 @@ public class DeliveryModifierTest extends AbstractWarehouseTest {
 
     // Test context
     private List<Parcel> parcels;
-    private List<Delivery> deliveries;
 
     @Before
     public void setUpContext() throws Exception {
@@ -52,18 +51,18 @@ public class DeliveryModifierTest extends AbstractWarehouseTest {
         p.setAddress("2255 route des Dolines, 06560 Valbonne");
         p.setCarrier("JPP");
         p.setCustomerName("Jasmine");
-        p.setParcelNumber("jpp106");
+        p.setParcelId("JPP1061071");
         parcels.add(p);
         p = new Parcel();
         p.setAddress("5522 avenue des Moutons, 06560 Valbonne");
         p.setCarrier("JPP2");
         p.setCustomerName("Arnold");
-        p.setParcelNumber("jpp206");
+        p.setParcelId("JPP1061072");
         p = new Parcel();
         p.setAddress("5555 avenue des Trident, 06560 Valbonne");
         p.setCarrier("JPP3");
         p.setCustomerName("Jasmine");
-        p.setParcelNumber("jpp306");
+        p.setParcelId("JPP1061073");
         parcels.add(p);
     }
 
@@ -74,11 +73,11 @@ public class DeliveryModifierTest extends AbstractWarehouseTest {
 
     @Test
     public void scanParcelTest() throws UnknownParcelException {
-        Delivery d = controlledParcel.scanParcel("jpp106");
+        Delivery d = controlledParcel.scanParcel("JPP1061071");
         assertNotNull(d);
         assertEquals(parcels.get(0), d.getParcel());
         assertEquals(DeliveryStatus.NOT_DELIVERED, d.getStatus());
-        assertNotNull(d.getDeliveryNumber());
+        assertNotNull(d.getDeliveryId());
 
     }
 
@@ -88,7 +87,9 @@ public class DeliveryModifierTest extends AbstractWarehouseTest {
     }
 
     @Test
-    public void findDeliveryTest() {
-
+    public void findDeliveryFoundTest() throws UnknownParcelException, UnknownDeliveryException {
+        Delivery d = controlledParcel.scanParcel("JPP1061071");
+        assertNotNull(controlledParcel.findDelivery(d.getDeliveryId()));
     }
+
 }

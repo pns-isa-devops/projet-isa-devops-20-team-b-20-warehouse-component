@@ -1,7 +1,5 @@
 package fr.polytech.warehouse.exception;
 
-import java.io.Serializable;
-
 import javax.xml.ws.WebFault;
 
 @WebFault(targetNamespace = "http://www.polytech.unice.fr/si/4a/isa/dronedelivery/delivery")

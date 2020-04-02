@@ -38,7 +38,7 @@ public class CarrierAPI {
         // just to test
         // @formatter:off
         return parcels.stream()
-                    .filter(p -> p.getParcelNumber().equals(parcelNumber))
+                    .filter(p -> p.getParcelId().equals(parcelNumber))
                     .findAny()
                     .orElse(null);
         // @formatter:on
