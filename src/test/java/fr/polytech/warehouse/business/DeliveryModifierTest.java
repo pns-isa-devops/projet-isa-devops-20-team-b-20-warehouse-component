@@ -10,6 +10,7 @@ import javax.ejb.EJB;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,6 +26,7 @@ import fr.polytech.warehouse.utils.CarrierAPI;
 /**
  * WarehouseTest
  */
+@Ignore
 @RunWith(Arquillian.class)
 public class DeliveryModifierTest extends AbstractWarehouseTest {
 

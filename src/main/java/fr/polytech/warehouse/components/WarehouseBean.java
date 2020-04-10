@@ -8,7 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -31,11 +33,12 @@ import fr.polytech.warehouse.utils.CarrierAPI;
 /**
  * WarehousBean
  */
+@LocalBean
 @Stateful
 @Named("warehouse")
 public class WarehouseBean implements DeliveryModifier, ControlledParcel {
 
-    private static final Logger log = Logger.getLogger(Logger.class.getName());
+	private static final Logger log = Logger.getLogger(Logger.class.getName());
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -60,8 +63,9 @@ public class WarehouseBean implements DeliveryModifier, ControlledParcel {
         }
         Delivery d = new Delivery();
         d.setParcel(p);
-        d.setStatus(DeliveryStatus.NOT_DELIVERED);
-        d.setDeliveryId(RandomStringUtils.random(10, "0123456789ABCDEFGHIJ"));
+		d.setStatus(DeliveryStatus.NOT_DELIVERED);
+		d.setDeliveryId(p.getParcelId());
+        //d.setDeliveryId(RandomStringUtils.random(10, "0123456789ABCDEFGHIJ"));
         entityManager.persist(p);
         entityManager.persist(d);
         return d;
@@ -74,6 +78,10 @@ public class WarehouseBean implements DeliveryModifier, ControlledParcel {
         } catch (Exception e) {
             throw new UnknownDeliveryException(id);
         }
+	}
+	
+    public List<Delivery> findDeliveries() {
+        return find().get();
     }
 
     @PostConstruct
@@ -85,64 +93,14 @@ public class WarehouseBean implements DeliveryModifier, ControlledParcel {
             Properties prop = new Properties();
             prop.load(this.getClass().getResourceAsStream("/carrier.properties"));
             carrier = new CarrierAPI(prop.getProperty("carrierHostName"), prop.getProperty("carrierPortNumber"));
-            addMock();
+			for(Parcel p : carrier.getParcels())
+			{
+				scanParcel(p.getParcelId());
+			}
         } catch (Exception e) {
             log.log(Level.INFO, "Cannot read carrier.properties file", e);
             throw new UncheckedException(e);
         }
-    }
-
-    private void addMock() {
-        List<Parcel> parcels = new ArrayList<>();
-        Parcel p = new Parcel();
-        p.setAddress("2255 route des Dolines, 06560 Valbonne");
-        p.setCarrier("JPP");
-        p.setCustomerName("Jasmine");
-        p.setParcelId(RandomStringUtils.random(10, "0123456789ABCDEFGHIJ"));
-        entityManager.persist(p);
-        parcels.add(p);
-        p = new Parcel();
-        p.setAddress("2255 route des Dolines, 06560 Valbonne");
-        p.setCarrier("JPP");
-        p.setCustomerName("Alexis");
-        p.setParcelId(RandomStringUtils.random(10, "0123456789ABCDEFGHIJ"));
-        entityManager.persist(p);
-        parcels.add(p);
-        p = new Parcel();
-        p.setAddress("2255 route des Dolines, 06560 Valbonne");
-        p.setCarrier("JPP");
-        p.setCustomerName("Betsara");
-        p.setParcelId(RandomStringUtils.random(10, "0123456789ABCDEFGHIJ"));
-        entityManager.persist(p);
-        parcels.add(p);
-        p = new Parcel();
-        p.setAddress("2255 route des Dolines, 06560 Valbonne");
-        p.setCarrier("JPP");
-        p.setCustomerName("Arnold");
-        p.setParcelId(RandomStringUtils.random(10, "0123456789ABCDEFGHIJ"));
-        entityManager.persist(p);
-        parcels.add(p);
-        this.carrier.withControlledParcels(parcels);
-        Delivery d = new Delivery();
-        d.setDeliveryId(RandomStringUtils.random(10, "0123456789ABCDEFGHIJ"));
-        d.setParcel(parcels.get(0));
-        d.setStatus(DeliveryStatus.NOT_DELIVERED);
-        entityManager.persist(d);
-        d = new Delivery();
-        d.setDeliveryId(RandomStringUtils.random(10, "0123456789ABCDEFGHIJ"));
-        d.setParcel(parcels.get(1));
-        d.setStatus(DeliveryStatus.NOT_DELIVERED);
-        entityManager.persist(d);
-        d = new Delivery();
-        d.setDeliveryId(RandomStringUtils.random(10, "0123456789ABCDEFGHIJ"));
-        d.setParcel(parcels.get(2));
-        d.setStatus(DeliveryStatus.NOT_DELIVERED);
-        entityManager.persist(d);
-        d = new Delivery();
-        d.setDeliveryId(RandomStringUtils.random(10, "0123456789ABCDEFGHIJ"));
-        d.setParcel(parcels.get(3));
-        d.setStatus(DeliveryStatus.NOT_DELIVERED);
-        entityManager.persist(d);
     }
 
     private Optional<Delivery> findById(String id) {
@@ -156,6 +114,21 @@ public class WarehouseBean implements DeliveryModifier, ControlledParcel {
             return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
             log.log(Level.FINEST, "No result for [" + id + "]", e);
+            return Optional.empty();
+        }
+	}
+	
+	private Optional<List<Delivery>> find() {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Delivery> criteria = builder.createQuery(Delivery.class);
+        Root<Delivery> root = criteria.from(Delivery.class);
+        criteria.select(root);
+
+        TypedQuery<Delivery> query = entityManager.createQuery(criteria);
+        try {
+            return Optional.of(query.getResultList());
+        } catch (NoResultException e) {
+            log.log(Level.FINEST, "No result", e);
             return Optional.empty();
         }
     }
