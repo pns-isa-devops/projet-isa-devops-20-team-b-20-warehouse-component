@@ -36,7 +36,7 @@ public class DeliveryModifierTest extends AbstractWarehouseTest {
     private List<Parcel> parcels;
 
     @Before
-    public void setUpContext() throws Exception {
+    public void setUpContext() {
         initData();
         initMock();
     }

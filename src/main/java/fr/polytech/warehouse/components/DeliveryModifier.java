@@ -13,7 +13,7 @@ public interface DeliveryModifier {
      * Retrieve a parcel information from his ID This method also store the parcel
      * in his state
      *
-     * @param id
+     * @param parcelNumber
      * @return the scanned parcel in a new delivery
      * @throws UnknownParcelException if the parcel those not existe in the database
      *                                of the carrier
@@ -23,7 +23,7 @@ public interface DeliveryModifier {
     /**
      * Find a specific delivery by his id
      *
-     * @param id
+     * @param deliveryNumber
      * @return the delivery if exist or null
      */
     Delivery findDelivery(String deliveryNumber) throws UnknownDeliveryException;
