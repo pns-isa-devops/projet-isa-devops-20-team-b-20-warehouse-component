@@ -34,11 +34,11 @@ import fr.polytech.warehouse.utils.CarrierAPI;
  * WarehousBean
  */
 @LocalBean
-@Stateful
+@Stateless
 @Named("warehouse")
 public class WarehouseBean implements DeliveryModifier, ControlledParcel {
 
-	private static final Logger log = Logger.getLogger(Logger.class.getName());
+    private static final Logger log = Logger.getLogger(Logger.class.getName());
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -63,9 +63,9 @@ public class WarehouseBean implements DeliveryModifier, ControlledParcel {
         }
         Delivery d = new Delivery();
         d.setParcel(p);
-		d.setStatus(DeliveryStatus.NOT_DELIVERED);
-		d.setDeliveryId(p.getParcelId());
-        //d.setDeliveryId(RandomStringUtils.random(10, "0123456789ABCDEFGHIJ"));
+        d.setStatus(DeliveryStatus.NOT_DELIVERED);
+        d.setDeliveryId(p.getParcelId());
+        // d.setDeliveryId(RandomStringUtils.random(10, "0123456789ABCDEFGHIJ"));
         entityManager.persist(p);
         entityManager.persist(d);
         return d;
@@ -78,8 +78,8 @@ public class WarehouseBean implements DeliveryModifier, ControlledParcel {
         } catch (Exception e) {
             throw new UnknownDeliveryException(id);
         }
-	}
-	
+    }
+
     public List<Delivery> findDeliveries() {
         return find().get();
     }
@@ -93,13 +93,21 @@ public class WarehouseBean implements DeliveryModifier, ControlledParcel {
             Properties prop = new Properties();
             prop.load(this.getClass().getResourceAsStream("/carrier.properties"));
             carrier = new CarrierAPI(prop.getProperty("carrierHostName"), prop.getProperty("carrierPortNumber"));
-			for(Parcel p : carrier.getParcels())
-			{
-				scanParcel(p.getParcelId());
-			}
         } catch (Exception e) {
             log.log(Level.INFO, "Cannot read carrier.properties file", e);
             throw new UncheckedException(e);
+        }
+    }
+
+    @Override
+    public void checkForNewParcels() {
+        try {
+            for (Parcel p : carrier.getParcels()) {
+                scanParcel(p.getParcelId());
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 

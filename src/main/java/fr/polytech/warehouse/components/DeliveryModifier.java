@@ -27,4 +27,10 @@ public interface DeliveryModifier {
      * @return the delivery if exist or null
      */
     Delivery findDelivery(String deliveryNumber) throws UnknownDeliveryException;
+
+    /**
+     * Call external carrier API to check if exist new parcels, if yes create 
+     * deliveries and add it in our system.
+     */
+    void checkForNewParcels();
 }
