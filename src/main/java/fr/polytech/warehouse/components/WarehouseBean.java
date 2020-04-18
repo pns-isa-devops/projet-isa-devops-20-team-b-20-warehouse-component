@@ -100,15 +100,17 @@ public class WarehouseBean implements DeliveryModifier, ControlledParcel {
     }
 
     @Override
-    public void checkForNewParcels() {
+    public List<Delivery> checkForNewParcels() {
+        List<Delivery> deliveries = new ArrayList<>();
         try {
             for (Parcel p : carrier.getParcels()) {
-                scanParcel(p.getParcelId());
+                deliveries.add(scanParcel(p.getParcelId()));
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        return deliveries;
     }
 
     private Optional<Delivery> findById(String id) {
