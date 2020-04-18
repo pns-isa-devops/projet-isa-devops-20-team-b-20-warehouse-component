@@ -33,7 +33,6 @@ import fr.polytech.warehouse.utils.CarrierAPI;
 /**
  * WarehousBean
  */
-@LocalBean
 @Stateless
 @Named("warehouse")
 public class WarehouseBean implements DeliveryModifier, ControlledParcel {
@@ -105,6 +104,24 @@ public class WarehouseBean implements DeliveryModifier, ControlledParcel {
         try {
             for (Parcel p : carrier.getParcels()) {
                 deliveries.add(scanParcel(p.getParcelId()));
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return deliveries;
+    }
+
+    @Override
+    public List<Delivery> checkForNewParcelsFromData(String data) {
+        List<Delivery> deliveries = new ArrayList<>();
+        try {
+            for (Parcel p : carrier.getParcelsFromData(data)) {
+                Delivery d = new Delivery();
+                d.setParcel(p);
+                d.setStatus(DeliveryStatus.NOT_DELIVERED);
+                d.setDeliveryId(p.getParcelId());
+                deliveries.add(d);
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block

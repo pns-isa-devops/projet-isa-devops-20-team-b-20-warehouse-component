@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Local;
 
+import fr.polytech.entities.Delivery;
 import fr.polytech.entities.Parcel;
 import fr.polytech.warehouse.utils.CarrierAPI;
 
@@ -16,4 +17,6 @@ public interface ControlledParcel extends DeliveryModifier {
     void useCarrierReference(CarrierAPI carrier);
 
     void useCarrierReference(CarrierAPI carrier, List<Parcel> parcels);
+
+    List<Delivery> checkForNewParcelsFromData(String data);
 }
