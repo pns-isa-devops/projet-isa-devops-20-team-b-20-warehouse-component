@@ -31,7 +31,7 @@ import fr.polytech.warehouse.utils.CarrierAPI;
  */
 @Stateless
 @Named("warehouse")
-public class WarehouseBean implements ControlledParcel {
+public class WarehouseBean implements ControlledParcel, DeliveryModifier {
 
     private static final Logger log = Logger.getLogger(Logger.class.getName());
 
@@ -129,9 +129,9 @@ public class WarehouseBean implements ControlledParcel {
             log.log(Level.FINEST, "No result for [" + id + "]", e);
             return Optional.empty();
         }
-	}
-	
-	private Optional<List<Delivery>> find() {
+    }
+
+    private Optional<List<Delivery>> find() {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Delivery> criteria = builder.createQuery(Delivery.class);
         Root<Delivery> root = criteria.from(Delivery.class);
