@@ -1,7 +1,32 @@
 [
-    {"ParcelNumber": "123456789A"},
-    {"ParcelNumber": "123456789B"},
-    {"ParcelNumber": "123456789C"},
-    {"ParcelNumber": "123456789D"},
-    {"ParcelNumber": "123456789E"}
+    {
+        "ParcelNumber": "123456789A",
+        "Address": "1 Rue Bidon",
+        "Carrier": "Colissimo",
+        "CustomerName": "Nadine"
+    },
+    {
+        "ParcelNumber": "123456789B",
+        "Address": "2 Rue Bidon",
+        "Carrier": "Colissimo",
+        "CustomerName": "François"
+    },
+    {
+        "ParcelNumber": "123456789C",
+        "Address": "3 Rue Bidon",
+        "Carrier": "Colissimo",
+        "CustomerName": "Guy"
+    },
+    {
+        "ParcelNumber": "123456789D",
+        "Address": "4 Rue Bidon",
+        "Carrier": "Colissimo",
+        "CustomerName": "Chloé"
+    },
+    {
+        "ParcelNumber": "123456789E",
+        "Address": "5 Rue Bidon",
+        "Carrier": "Colissimo",
+        "CustomerName": "Sophie"
+    }
 ]

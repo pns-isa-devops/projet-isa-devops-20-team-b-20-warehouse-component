@@ -14,9 +14,5 @@ import fr.polytech.warehouse.utils.CarrierAPI;
 @Local
 public interface ControlledParcel extends DeliveryModifier {
 
-    void useCarrierReference(CarrierAPI carrier);
-
-    void useCarrierReference(CarrierAPI carrier, List<Parcel> parcels);
-
     List<Delivery> checkForNewParcelsFromData(String data);
 }

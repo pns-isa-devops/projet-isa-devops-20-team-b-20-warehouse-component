@@ -8,8 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -19,8 +17,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import org.apache.commons.lang.RandomStringUtils;
 
 import fr.polytech.entities.Delivery;
 import fr.polytech.entities.DeliveryStatus;
@@ -35,7 +31,7 @@ import fr.polytech.warehouse.utils.CarrierAPI;
  */
 @Stateless
 @Named("warehouse")
-public class WarehouseBean implements DeliveryModifier, ControlledParcel {
+public class WarehouseBean implements ControlledParcel {
 
     private static final Logger log = Logger.getLogger(Logger.class.getName());
 
@@ -43,16 +39,6 @@ public class WarehouseBean implements DeliveryModifier, ControlledParcel {
     private EntityManager entityManager;
 
     private CarrierAPI carrier;
-
-    @Override
-    public void useCarrierReference(CarrierAPI carrier) {
-        this.carrier = carrier;
-    }
-
-    @Override
-    public void useCarrierReference(CarrierAPI carrier, List<Parcel> parcels) {
-        this.carrier = carrier.withControlledParcels(parcels);
-    }
 
     @Override
     public Delivery scanParcel(String id) throws UnknownParcelException {

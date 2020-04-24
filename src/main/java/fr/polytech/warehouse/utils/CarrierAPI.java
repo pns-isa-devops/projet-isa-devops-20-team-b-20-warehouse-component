@@ -34,7 +34,7 @@ public class CarrierAPI {
             JSONObject parcelJSON = json.getJSONObject(i);
             //System.out.println(parcelJSON);
             //TODO Change fixed values to real informations (from api ?)
-            parcels.add(new Parcel(parcelJSON.getString("ParcelNumber"), "Rue normal", "Colissimo", "Nadine"));
+            parcels.add(new Parcel(parcelJSON.getString("ParcelNumber"), parcelJSON.getString("Address"), parcelJSON.getString("Carrier"), parcelJSON.getString("CustomerName")));
         }
         //parcels.forEach(parcel -> System.out.println(parcel.toString()));
         return parcels;

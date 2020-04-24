@@ -18,11 +18,9 @@ import org.junit.runner.RunWith;
 import arquillian.AbstractWarehouseTest;
 import fr.polytech.entities.Delivery;
 import fr.polytech.entities.DeliveryStatus;
-import fr.polytech.entities.Parcel;
 import fr.polytech.warehouse.components.ControlledParcel;
 import fr.polytech.warehouse.exception.UnknownDeliveryException;
 import fr.polytech.warehouse.exception.UnknownParcelException;
-import fr.polytech.warehouse.utils.CarrierAPI;
 
 import org.apache.commons.io.IOUtils;
 
