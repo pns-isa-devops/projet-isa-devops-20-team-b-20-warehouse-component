@@ -1,12 +1,9 @@
 package fr.polytech.warehouse.components;
 
-import java.util.List;
+import fr.polytech.entities.Delivery;
 
 import javax.ejb.Local;
-
-import fr.polytech.entities.Delivery;
-import fr.polytech.entities.Parcel;
-import fr.polytech.warehouse.utils.CarrierAPI;
+import java.util.List;
 
 /**
  * ControlledParcel
