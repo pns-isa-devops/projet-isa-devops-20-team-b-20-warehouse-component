@@ -4,14 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.ejb.EJB;
 
+import org.apache.commons.io.IOUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,10 +17,9 @@ import arquillian.AbstractWarehouseTest;
 import fr.polytech.entities.Delivery;
 import fr.polytech.entities.DeliveryStatus;
 import fr.polytech.warehouse.components.ControlledParcel;
+import fr.polytech.warehouse.exception.ExternalCarrierApiException;
 import fr.polytech.warehouse.exception.UnknownDeliveryException;
 import fr.polytech.warehouse.exception.UnknownParcelException;
-
-import org.apache.commons.io.IOUtils;
 
 /**
  * WarehouseTest
@@ -35,9 +32,9 @@ public class DeliveryModifierTest extends AbstractWarehouseTest {
     private ControlledParcel controlledParcel;
 
     @Before
-    public void initMock() throws IOException {
-        String data = IOUtils.toString(Thread.currentThread().getContextClassLoader()
-        .getResourceAsStream("parcels.json"), "UTF-8");
+    public void initMock() throws IOException, ExternalCarrierApiException {
+        String data = IOUtils
+                .toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("parcels.json"), "UTF-8");
         controlledParcel.checkForNewParcelsFromData(data);
     }
 

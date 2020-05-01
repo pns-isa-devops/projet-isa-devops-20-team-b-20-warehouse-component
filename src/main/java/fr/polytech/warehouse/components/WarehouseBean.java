@@ -21,6 +21,7 @@ import javax.persistence.criteria.Root;
 import fr.polytech.entities.Delivery;
 import fr.polytech.entities.DeliveryStatus;
 import fr.polytech.entities.Parcel;
+import fr.polytech.warehouse.exception.ExternalCarrierApiException;
 import fr.polytech.warehouse.exception.UncheckedException;
 import fr.polytech.warehouse.exception.UnknownDeliveryException;
 import fr.polytech.warehouse.exception.UnknownParcelException;
@@ -85,33 +86,23 @@ public class WarehouseBean implements ControlledParcel, DeliveryModifier {
     }
 
     @Override
-    public List<Delivery> checkForNewParcels() {
+    public List<Delivery> checkForNewParcels() throws ExternalCarrierApiException, UnknownParcelException {
         List<Delivery> deliveries = new ArrayList<>();
-        try {
-            for (Parcel p : carrier.getParcels()) {
-                deliveries.add(scanParcel(p.getParcelId()));
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        for (Parcel p : carrier.getParcels()) {
+            deliveries.add(scanParcel(p.getParcelId()));
         }
         return deliveries;
     }
 
     @Override
-    public List<Delivery> checkForNewParcelsFromData(String data) {
+    public List<Delivery> checkForNewParcelsFromData(String data) throws ExternalCarrierApiException {
         List<Delivery> deliveries = new ArrayList<>();
-        try {
-            for (Parcel p : carrier.getParcelsFromData(data)) {
-                Delivery d = new Delivery();
-                d.setParcel(p);
-                d.setStatus(DeliveryStatus.NOT_DELIVERED);
-                d.setDeliveryId(p.getParcelId());
-                deliveries.add(d);
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        for (Parcel p : carrier.getParcelsFromData(data)) {
+            Delivery d = new Delivery();
+            d.setParcel(p);
+            d.setStatus(DeliveryStatus.NOT_DELIVERED);
+            d.setDeliveryId(p.getParcelId());
+            deliveries.add(d);
         }
         return deliveries;
     }
