@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import fr.polytech.entities.Parcel;
+import fr.polytech.warehouse.exception.ExternalCarrierApiException;
 
 /**
  * CarrierAPI
@@ -26,35 +27,32 @@ public class CarrierAPI {
     public CarrierAPI(String host, String port) {
         this.url = "http://" + host + ":" + port;
     }
-    
+
     public List<Parcel> parseJSONtoParcels(JSONArray json) {
         parcels = new ArrayList<>();
-        for(int i=0; i<json.length(); i++)
-        {
+        for (int i = 0; i < json.length(); i++) {
             JSONObject parcelJSON = json.getJSONObject(i);
-            //System.out.println(parcelJSON);
-            //TODO Change fixed values to real informations (from api ?)
-            parcels.add(new Parcel(parcelJSON.getString("ParcelNumber"), parcelJSON.getString("Address"), parcelJSON.getString("Carrier"), parcelJSON.getString("CustomerName")));
+            parcels.add(new Parcel(parcelJSON.getString("ParcelNumber"), parcelJSON.getString("Address"),
+                    parcelJSON.getString("Carrier"), parcelJSON.getString("CustomerName")));
         }
-        //parcels.forEach(parcel -> System.out.println(parcel.toString()));
         return parcels;
     }
 
-    public JSONArray getJSONParcels() throws Exception {
+    public JSONArray getJSONParcels() throws ExternalCarrierApiException {
         String response;
         try {
             response = WebClient.create(url).path("/carrier/parcel").get(String.class);
         } catch (Exception e) {
-            throw new Exception(url + "/carrier/parcel", e);
+            throw new ExternalCarrierApiException(url + "/carrier/parcel", e);
         }
         return new JSONArray(response);
     }
-	
-	public List<Parcel> getParcels() throws Exception {
+
+    public List<Parcel> getParcels() throws ExternalCarrierApiException {
         return parseJSONtoParcels(getJSONParcels());
     }
 
-    public List<Parcel> getParcelsFromData(String data) throws Exception {
+    public List<Parcel> getParcelsFromData(String data) throws ExternalCarrierApiException {
         return parseJSONtoParcels(new JSONArray(data));
     }
 
