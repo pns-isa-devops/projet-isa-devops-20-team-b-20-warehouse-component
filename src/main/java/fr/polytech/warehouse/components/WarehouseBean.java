@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -22,6 +23,7 @@ import fr.polytech.entities.Delivery;
 import fr.polytech.entities.DeliveryStatus;
 import fr.polytech.entities.Parcel;
 import fr.polytech.warehouse.exception.ExternalCarrierApiException;
+import fr.polytech.invoice.components.DeliveryBilling;
 import fr.polytech.warehouse.exception.UncheckedException;
 import fr.polytech.warehouse.exception.UnknownDeliveryException;
 import fr.polytech.warehouse.exception.UnknownParcelException;
@@ -40,6 +42,9 @@ public class WarehouseBean implements ControlledParcel, DeliveryModifier {
     private EntityManager entityManager;
 
     private CarrierAPI carrier;
+
+    @EJB
+    private DeliveryBilling billingDelivery;
 
     @Override
     public Delivery scanParcel(String id) throws UnknownParcelException {
@@ -91,6 +96,7 @@ public class WarehouseBean implements ControlledParcel, DeliveryModifier {
         for (Parcel p : carrier.getParcels()) {
             deliveries.add(scanParcel(p.getParcelId()));
         }
+        billingDelivery.generatingInvoice(deliveries);
         return deliveries;
     }
 
