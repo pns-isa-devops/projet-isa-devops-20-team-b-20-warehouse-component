@@ -1,10 +1,8 @@
 package fr.polytech.warehouse.components;
 
-import fr.polytech.entities.Delivery;
-import fr.polytech.warehouse.exception.ExternalCarrierApiException;
-
 import javax.ejb.Local;
-import java.util.List;
+
+import fr.polytech.warehouse.utils.CarrierAPI;
 
 /**
  * ControlledParcel
@@ -12,5 +10,5 @@ import java.util.List;
 @Local
 public interface ControlledParcel extends DeliveryModifier {
 
-    List<Delivery> checkForNewParcelsFromData(String data) throws ExternalCarrierApiException;
+    void useCarrierAPIReference(CarrierAPI api);
 }

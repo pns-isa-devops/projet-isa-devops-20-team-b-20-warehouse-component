@@ -13,17 +13,6 @@ import fr.polytech.warehouse.exception.UnknownParcelException;
 public interface DeliveryModifier {
 
     /**
-     * Retrieve a parcel information from his ID This method also store the parcel
-     * in his state
-     *
-     * @param parcelNumber
-     * @return the scanned parcel in a new delivery
-     * @throws UnknownParcelException if the parcel those not existe in the database
-     *                                of the carrier
-     */
-    Delivery scanParcel(String parcelNumber) throws UnknownParcelException;
-
-    /**
      * Find a specific delivery by his id
      *
      * @param deliveryNumber
@@ -34,7 +23,7 @@ public interface DeliveryModifier {
     /**
      * Call external carrier API to check if exist new parcels, if yes create
      * deliveries and add it in our system.
-     * 
+     *
      * @throws UnknownParcelException
      * @throws ExternalCarrierApiException
      */

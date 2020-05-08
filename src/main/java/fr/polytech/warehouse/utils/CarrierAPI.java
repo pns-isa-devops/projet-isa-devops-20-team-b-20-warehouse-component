@@ -62,19 +62,10 @@ public class CarrierAPI {
     }
 
     /**
-     * prove of concept (mocked value)
+     * (mocked value)
      */
     public CarrierAPI() {
         this("localhost", "9191");
     }
 
-    public Parcel getParcelInformation(String parcelNumber) {
-        // just to test
-        // @formatter:off
-        return parcels.stream()
-                    .filter(p -> p.getParcelId().equals(parcelNumber))
-                    .findAny()
-                    .orElse(null);
-        // @formatter:on
-    }
 }

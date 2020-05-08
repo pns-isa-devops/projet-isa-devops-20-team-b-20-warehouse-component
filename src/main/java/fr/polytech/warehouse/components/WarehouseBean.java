@@ -47,19 +47,8 @@ public class WarehouseBean implements ControlledParcel, DeliveryModifier {
     private DeliveryBilling billingDelivery;
 
     @Override
-    public Delivery scanParcel(String id) throws UnknownParcelException {
-        Parcel p = carrier.getParcelInformation(id);
-        if (p == null) {
-            throw new UnknownParcelException(id);
-        }
-        Delivery d = new Delivery();
-        d.setParcel(p);
-        d.setStatus(DeliveryStatus.NOT_DELIVERED);
-        d.setDeliveryId(p.getParcelId());
-        // d.setDeliveryId(RandomStringUtils.random(10, "0123456789ABCDEFGHIJ"));
-        entityManager.persist(p);
-        entityManager.persist(d);
-        return d;
+    public void useCarrierAPIReference(CarrierAPI api) {
+        this.carrier = api;
     }
 
     @Override
@@ -71,8 +60,14 @@ public class WarehouseBean implements ControlledParcel, DeliveryModifier {
         }
     }
 
-    public List<Delivery> findDeliveries() {
-        return find().get();
+    @Override
+    public List<Delivery> checkForNewParcels() throws ExternalCarrierApiException, UnknownParcelException {
+        List<Delivery> deliveries = new ArrayList<>();
+        for (Parcel p : carrier.getParcels()) {
+            deliveries.add(makeDelivery(p));
+        }
+        billingDelivery.generatingInvoice(deliveries);
+        return deliveries;
     }
 
     @PostConstruct
@@ -90,27 +85,17 @@ public class WarehouseBean implements ControlledParcel, DeliveryModifier {
         }
     }
 
-    @Override
-    public List<Delivery> checkForNewParcels() throws ExternalCarrierApiException, UnknownParcelException {
-        List<Delivery> deliveries = new ArrayList<>();
-        for (Parcel p : carrier.getParcels()) {
-            deliveries.add(scanParcel(p.getParcelId()));
+    private Delivery makeDelivery(Parcel newParcel) throws UnknownParcelException {
+        if (newParcel == null) {
+            throw new UnknownParcelException("null");
         }
-        billingDelivery.generatingInvoice(deliveries);
-        return deliveries;
-    }
-
-    @Override
-    public List<Delivery> checkForNewParcelsFromData(String data) throws ExternalCarrierApiException {
-        List<Delivery> deliveries = new ArrayList<>();
-        for (Parcel p : carrier.getParcelsFromData(data)) {
-            Delivery d = new Delivery();
-            d.setParcel(p);
-            d.setStatus(DeliveryStatus.NOT_DELIVERED);
-            d.setDeliveryId(p.getParcelId());
-            deliveries.add(d);
-        }
-        return deliveries;
+        Delivery d = new Delivery();
+        d.setParcel(newParcel);
+        d.setStatus(DeliveryStatus.NOT_DELIVERED);
+        d.setDeliveryId(newParcel.getParcelId());
+        entityManager.persist(newParcel);
+        entityManager.persist(d);
+        return d;
     }
 
     private Optional<Delivery> findById(String id) {
@@ -124,21 +109,6 @@ public class WarehouseBean implements ControlledParcel, DeliveryModifier {
             return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
             log.log(Level.FINEST, "No result for [" + id + "]", e);
-            return Optional.empty();
-        }
-    }
-
-    private Optional<List<Delivery>> find() {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Delivery> criteria = builder.createQuery(Delivery.class);
-        Root<Delivery> root = criteria.from(Delivery.class);
-        criteria.select(root);
-
-        TypedQuery<Delivery> query = entityManager.createQuery(criteria);
-        try {
-            return Optional.of(query.getResultList());
-        } catch (NoResultException e) {
-            log.log(Level.FINEST, "No result", e);
             return Optional.empty();
         }
     }
