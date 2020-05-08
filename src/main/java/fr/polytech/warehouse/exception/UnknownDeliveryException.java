@@ -1,9 +1,11 @@
 package fr.polytech.warehouse.exception;
 
+import java.io.Serializable;
+
 import javax.xml.ws.WebFault;
 
 @WebFault(targetNamespace = "http://www.polytech.unice.fr/si/4a/isa/dronedelivery/delivery")
-public class UnknownDeliveryException extends Exception {
+public class UnknownDeliveryException extends Exception implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String deliveryNumber;
@@ -29,4 +31,8 @@ public class UnknownDeliveryException extends Exception {
         this.deliveryNumber = deliveryNumber;
     }
 
+    @Override
+    public String getMessage() {
+        return "The Delivery with id : " + deliveryNumber + " can't be found.";
+    }
 }

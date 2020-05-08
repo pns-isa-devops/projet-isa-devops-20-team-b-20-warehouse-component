@@ -36,7 +36,7 @@ import fr.polytech.warehouse.utils.CarrierAPI;
 @Named("warehouse")
 public class WarehouseBean implements ControlledParcel, DeliveryModifier {
 
-    private static final Logger log = Logger.getLogger(Logger.class.getName());
+    private static final Logger log = Logger.getLogger(WarehouseBean.class.getName());
 
     @PersistenceContext
     private EntityManager entityManager;
