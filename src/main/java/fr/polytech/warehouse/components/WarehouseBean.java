@@ -53,17 +53,18 @@ public class WarehouseBean implements ControlledParcel, DeliveryModifier {
 
     @Override
     public Delivery findDelivery(String id) throws UnknownDeliveryException {
-        try {
-            return findById(id).get();
-        } catch (Exception e) {
-            throw new UnknownDeliveryException(id);
+        Optional<Delivery> optDelivery = findById(id);
+        if (optDelivery.isPresent()) {
+            return optDelivery.get();
         }
+        throw new UnknownDeliveryException(id);
     }
 
     @Override
     public List<Delivery> checkForNewParcels() throws ExternalCarrierApiException, UnknownParcelException {
-        List<Delivery> deliveries = new ArrayList<>();
-        for (Parcel p : carrier.getParcels()) {
+        List<Parcel> parcels = carrier.getParcels();
+        List<Delivery> deliveries = new ArrayList<>(parcels.size());
+        for (Parcel p : parcels) {
             deliveries.add(makeDelivery(p));
         }
         billingDelivery.generatingInvoice(deliveries);

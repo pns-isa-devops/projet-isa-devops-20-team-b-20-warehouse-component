@@ -29,7 +29,7 @@ public class CarrierAPI {
     }
 
     public List<Parcel> parseJSONtoParcels(JSONArray json) {
-        parcels = new ArrayList<>();
+        parcels = new ArrayList<>(json.length());
         for (int i = 0; i < json.length(); i++) {
             JSONObject parcelJSON = json.getJSONObject(i);
             parcels.add(new Parcel(parcelJSON.getString("ParcelNumber"), parcelJSON.getString("Address"),

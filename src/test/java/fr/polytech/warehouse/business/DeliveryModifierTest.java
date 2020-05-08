@@ -1,8 +1,8 @@
 package fr.polytech.warehouse.business;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -21,7 +21,6 @@ import org.junit.runners.MethodSorters;
 
 import arquillian.AbstractWarehouseTest;
 import fr.polytech.entities.Delivery;
-import fr.polytech.entities.DeliveryStatus;
 import fr.polytech.entities.Parcel;
 import fr.polytech.warehouse.components.ControlledParcel;
 import fr.polytech.warehouse.exception.ExternalCarrierApiException;
